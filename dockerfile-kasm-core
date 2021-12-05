@@ -5,6 +5,12 @@ ARG DISTRO=ubuntu
 MAINTAINER Kasm Tech "info@kasmweb.com"
 LABEL "com.kasmweb.image"="true"
 
+RUN echo '--ipv4' > /root/.curlrc
+RUN echo 'Acquire::ForceIPv4 "true";' | tee /etc/apt/apt.conf.d/99force-ipv4
+RUN apt update && apt install -y apt-transport-https ca-certificates
+COPY ./src/sources.list.tqing /etc/apt/sources.list                        
+RUN apt update && apt upgrade -y
+
 ### Install common tools
 COPY ./src/ubuntu/install/tools $INST_SCRIPTS/tools/
 RUN bash $INST_SCRIPTS/tools/install_tools.sh && rm -rf $INST_SCRIPTS/tools/
